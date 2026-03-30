@@ -47,6 +47,7 @@ window.DEMO_CONFIG = {
     itemQuantity:   1,
     itemTotal:      "US$1.49",
     itemDelivery:   "Instant delivery to your account",
+    email:          "player@gmail.com",
 
     payment:        "Google Pay",
   },
