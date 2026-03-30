@@ -34,7 +34,7 @@ window.DEMO_CONFIG = {
   order: {
     orderNumber:    "#1978322789",
     customerName:   "Alex",
-    email:          "player@example.com",
+    email:          "player@gmail.com",
     address:        "",
     zipcode:        "90210",
 
@@ -47,21 +47,20 @@ window.DEMO_CONFIG = {
     itemQuantity:   1,
     itemTotal:      "US$1.49",
     itemDelivery:   "Instant delivery to your account",
-    email:          "player@gmail.com",
 
     payment:        "Google Pay",
   },
 
   // ---------------------------------------------------------------------------
-  // MOMENTSCIENCE SDK
+  // MOMENTSCIENCE — REST API (MomentPerks API)
   // ---------------------------------------------------------------------------
+  // API key: Dashboard → Profile Settings → API Keys → "Ads/Offers" permission
+  // Uses direct POST to https://api.adspostx.com/native/v2/offers.json
   momentscience: {
-    accountId:    "6e2e1fc0dd47d6e4",         // Your MS account ID
-    placement:    "order_confirmation",         // Placement identifier
-    maxOffers:    3,                            // Max offers to show
-    devMode:      true,                         // true = no tracking, all offers returned (local testing only)
-    cdnUrl:       "https://cdn-staging.pubtailer.com/launcher.js",
-    // Production CDN: "https://cdn.pubtailer.com/launcher.js"
+    apiKey:    "0bf14c41a03bfa38",  // API key — Profile Settings → API Keys → "Ads/Offers"
+    placement: "order_confirmation",
+    maxOffers: 3,
+    devMode:   true,                // true = test offers, disables impression tracking
   },
 
 };
