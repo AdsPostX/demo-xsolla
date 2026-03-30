@@ -34,8 +34,19 @@
         tags:            ['gaming', 'in-app-purchase', 'xsolla']
       };
 
+      // msSuccessVisible is set to true by script.js once the success screen appears.
+      // If the SDK fires a ready/load event after that point, show the moment immediately.
+      window.msSuccessVisible = false;
+
       window.AdpxCallback = function(event, payload) {
         console.log('[MomentScience]', event, payload);
+        if (window.msSuccessVisible &&
+            (event === 'ready' || event === 'load' || event === 'loaded' || event === 'initialized')) {
+          if (window.Adpx && typeof window.Adpx.show === 'function') {
+            window.Adpx.show();
+            console.log('[MomentScience] show() via callback event:', event);
+          }
+        }
       };
 
       // Set SDK src
@@ -89,8 +100,8 @@
         <div class="order-divider"></div>
 
         <div class="order-row order-row--total">
-          <span>Total</span>
-          <span id="c-total"></span>
+          <span class="total-label">Total</span>
+          <span class="total-price" id="c-total"></span>
         </div>
 
         <!-- Cookie notice -->
@@ -125,45 +136,66 @@
 
         <!-- Wallet buttons -->
         <div class="wallet-buttons">
+          <!-- Google Pay -->
           <button class="wallet-btn wallet-btn--google" aria-label="Pay with Google Pay">
-            <svg height="20" viewBox="0 0 77 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <text x="0" y="16" font-family="'Product Sans', Arial, sans-serif" font-size="14" font-weight="500" fill="#4285F4">G</text>
-              <text x="10" y="16" font-family="'Product Sans', Arial, sans-serif" font-size="14" font-weight="500" fill="#EA4335">o</text>
-              <text x="19" y="16" font-family="'Product Sans', Arial, sans-serif" font-size="14" font-weight="500" fill="#FBBC05">o</text>
-              <text x="28" y="16" font-family="'Product Sans', Arial, sans-serif" font-size="14" font-weight="500" fill="#4285F4">g</text>
-              <text x="36" y="16" font-family="'Product Sans', Arial, sans-serif" font-size="14" font-weight="500" fill="#34A853">l</text>
-              <text x="41" y="16" font-family="'Product Sans', Arial, sans-serif" font-size="14" font-weight="500" fill="#EA4335">e</text>
-              <text x="50" y="16" font-family="'Product Sans', Arial, sans-serif" font-size="14" font-weight="400" fill="#5F6368"> Pay</text>
-            </svg>
+            <span class="wallet-inner">
+              <!-- Official Google G icon (4-color) -->
+              <svg height="20" width="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              <span class="wallet-label gpay-label">Google Pay</span>
+            </span>
           </button>
+
+          <!-- Apple Pay -->
           <button class="wallet-btn wallet-btn--apple" aria-label="Pay with Apple Pay">
-            <svg height="20" viewBox="0 0 65 20" fill="none">
-              <path d="M10.4 4.2c.5-.6.8-1.4.7-2.2-.7.1-1.6.5-2.1 1.1-.5.5-.8 1.3-.7 2.1.8 0 1.6-.4 2.1-1z" fill="black"/>
-              <path d="M11.1 5.3c-1.2-.1-2.2.7-2.8.7-.5 0-1.4-.6-2.4-.6-1.2.1-2.4.7-3 1.9-1.3 2.2-.3 5.5.9 7.3.6.9 1.3 1.9 2.3 1.9.9 0 1.2-.6 2.3-.6s1.4.6 2.3.6c1 0 1.6-.9 2.2-1.8.4-.5.7-1.1.9-1.7-2.1-.8-2.4-3.8-.3-5-.7-.8-1.6-1.3-2.4-1.7z" fill="black"/>
-              <text x="18" y="15" font-family="-apple-system, 'SF Pro Text', sans-serif" font-size="13" font-weight="600" fill="black">Pay</text>
-            </svg>
+            <span class="wallet-inner">
+              <!-- Apple logo (black on white) -->
+              <svg viewBox="0 0 17 21" height="20" width="17" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M14.08 10.85c-.02-2.17 1.77-3.22 1.85-3.28-1.01-1.48-2.58-1.68-3.14-1.7-1.34-.14-2.62.79-3.3.79-.68 0-1.74-.77-2.87-.75C5.1 5.93 3.73 6.78 2.97 8.11 1.26 11.11 2.41 15.37 4.02 17.62c.79 1.14 1.74 2.43 2.99 2.38 1.2-.05 1.65-.77 3.11-.77 1.45 0 1.86.77 3.12.75 1.3-.02 2.12-1.17 2.9-2.32.93-1.31 1.31-2.58 1.33-2.65-.03-.01-2.55-1.02-2.57-3.78.02-.02.18-.23.18-.38z" fill="black"/>
+                <path d="M11.7 4.26C12.35 3.45 12.8 2.35 12.67 1.24c-.97.04-2.18.65-2.89 1.47-.62.72-1.17 1.87-1.02 2.97 1.09.08 2.2-.55 2.94-1.42z" fill="black"/>
+              </svg>
+              <span class="wallet-label apple-pay-label">Pay</span>
+            </span>
           </button>
         </div>
 
         <!-- Payment method tabs -->
         <div class="pay-tabs" role="tablist">
           <button class="pay-tab pay-tab--active" role="tab" aria-selected="true" data-tab="card">
-            <svg class="pay-tab__icon" width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <rect x="1.5" y="3.5" width="15" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M1.5 7.5h15" stroke="currentColor" stroke-width="1.5"/>
+            <svg class="pay-tab__icon" width="18" height="14" viewBox="0 0 18 14" fill="none">
+              <rect x="0.75" y="0.75" width="16.5" height="12.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M0.75 4.5h16.5" stroke="currentColor" stroke-width="1.5"/>
             </svg>
             <span>Card</span>
           </button>
           <button class="pay-tab" role="tab" aria-selected="false" data-tab="paypal">
-            <span class="pay-tab__icon pay-tab__icon--paypal">P</span>
+            <!-- PayPal P icon -->
+            <svg class="pay-tab__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="11" fill="#003087"/>
+              <path d="M8.5 6h3.8c2.1 0 3.3 1 3.1 2.9-.2 2.2-1.7 3.1-3.7 3.1H10l-.8 4.5H7.1L8.5 6z" fill="#009cde"/>
+              <path d="M9.8 10.5h1.5c1.2 0 2-.5 2.1-1.6.1-.9-.4-1.4-1.5-1.4H10.3l-.5 3z" fill="white"/>
+            </svg>
             <span>PayPal</span>
           </button>
           <button class="pay-tab" role="tab" aria-selected="false" data-tab="cashapp">
-            <span class="pay-tab__icon pay-tab__icon--cashapp">$</span>
+            <!-- Cash App $ icon -->
+            <svg class="pay-tab__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="24" height="24" rx="6" fill="#00D632"/>
+              <path d="M12.88 13.38c1.02.16 1.71.57 1.71 1.38 0 .84-.77 1.37-1.91 1.37v.87h-.96v-.9c-1.1-.09-1.88-.62-1.99-1.53h1.09c.1.46.52.74 1.16.74.7 0 1.1-.28 1.1-.68 0-.34-.27-.55-1-.67l-.72-.12C10.36 13.7 9.72 13.18 9.72 12.3c0-.8.67-1.35 1.96-1.46v-.84h.96v.85c1.02.1 1.73.62 1.84 1.47h-1.08c-.09-.4-.47-.67-1.07-.67-.64 0-1.01.26-1.01.66 0 .33.26.52.92.63l.64.1v.34z" fill="white"/>
+              <path d="M14.5 8.5l-.73-.27a.76.76 0 00-.96.45l-.09.25a8.2 8.2 0 00-3.24 0l-.09-.25a.76.76 0 00-.96-.45l-.73.27a.76.76 0 00-.45.96l.2.54a4.74 4.74 0 000 3.25l-.2.54a.76.76 0 00.45.96l.73.27a.76.76 0 00.96-.45l.09-.25a8.2 8.2 0 003.24 0l.09.25a.76.76 0 00.96.45l.73-.27a.76.76 0 00.45-.96l-.2-.54a4.74 4.74 0 000-3.25l.2-.54a.76.76 0 00-.45-.96z" fill="white" opacity="0"/>
+            </svg>
             <span>Cash App</span>
           </button>
           <button class="pay-tab" role="tab" aria-selected="false" data-tab="venmo">
-            <span class="pay-tab__icon pay-tab__icon--venmo">V</span>
+            <!-- Venmo V icon -->
+            <svg class="pay-tab__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="24" height="24" rx="6" fill="#3D95CE"/>
+              <path d="M16.5 7c.3.5.4 1 .4 1.6 0 2-1.7 4.6-3.1 6.4h-3.2L9 7.5l2.8-.3.7 5.4c.6-1.1 1.4-2.8 1.4-3.9 0-.6-.1-1.1-.3-1.5L16.5 7z" fill="white"/>
+            </svg>
             <span>Venmo</span>
           </button>
           <button class="pay-tab pay-tab--more" role="tab" aria-selected="false">
@@ -178,11 +210,39 @@
           <div class="input-wrap input-wrap--card">
             <input type="text" class="form-input" placeholder="Card number" maxlength="19" inputmode="numeric">
             <div class="card-brands">
-              <span class="brand brand--visa">VISA</span>
-              <span class="brand brand--mc">MC</span>
-              <span class="brand brand--amex">AMEX</span>
-              <span class="brand brand--jcb">JCB</span>
-              <span class="brand brand--disc">D</span>
+              <!-- VISA -->
+              <svg class="brand-svg" viewBox="0 0 44 16" height="14" width="40" xmlns="http://www.w3.org/2000/svg" aria-label="Visa">
+                <rect width="44" height="16" rx="2" fill="white"/>
+                <text x="3" y="12.5" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="900" font-style="italic" fill="#1A1F71" letter-spacing="0.4">VISA</text>
+              </svg>
+              <!-- Mastercard -->
+              <svg class="brand-svg" viewBox="0 0 36 24" height="18" width="27" xmlns="http://www.w3.org/2000/svg" aria-label="Mastercard">
+                <defs><clipPath id="mc-lc"><circle cx="13" cy="12" r="9"/></clipPath></defs>
+                <circle cx="13" cy="12" r="9" fill="#EB001B"/>
+                <circle cx="23" cy="12" r="9" fill="#F79E1B"/>
+                <circle cx="23" cy="12" r="9" fill="#FF5F00" clip-path="url(#mc-lc)"/>
+              </svg>
+              <!-- AMEX -->
+              <svg class="brand-svg" viewBox="0 0 38 24" height="18" width="28" xmlns="http://www.w3.org/2000/svg" aria-label="American Express">
+                <rect width="38" height="24" rx="3" fill="#2557D6"/>
+                <text x="4.5" y="17" font-family="Arial, Helvetica, sans-serif" font-size="9.5" font-weight="800" fill="#fff" letter-spacing="0.3">AMEX</text>
+              </svg>
+              <!-- JCB -->
+              <svg class="brand-svg" viewBox="0 0 36 24" height="18" width="27" xmlns="http://www.w3.org/2000/svg" aria-label="JCB">
+                <rect width="36" height="24" rx="3" fill="#fff" stroke="#e8e8e8" stroke-width="0.5"/>
+                <rect x="5" y="3" width="8" height="18" rx="4" fill="#003087"/>
+                <rect x="14" y="3" width="8" height="18" rx="4" fill="#CC0000"/>
+                <rect x="23" y="3" width="8" height="18" rx="4" fill="#007940"/>
+                <text x="9" y="16" font-family="Arial" font-size="8" font-weight="900" fill="#fff" text-anchor="middle">J</text>
+                <text x="18" y="16" font-family="Arial" font-size="8" font-weight="900" fill="#fff" text-anchor="middle">C</text>
+                <text x="27" y="16" font-family="Arial" font-size="8" font-weight="900" fill="#fff" text-anchor="middle">B</text>
+              </svg>
+              <!-- Discover -->
+              <svg class="brand-svg" viewBox="0 0 38 24" height="18" width="28" xmlns="http://www.w3.org/2000/svg" aria-label="Discover">
+                <rect width="38" height="24" rx="3" fill="#fff" stroke="#e8e8e8" stroke-width="0.5"/>
+                <circle cx="28" cy="12" r="10" fill="#F76F20"/>
+                <text x="6" y="16.5" font-family="Arial, Helvetica, sans-serif" font-size="7" font-weight="700" fill="#231F20" letter-spacing="0.2">DISC</text>
+              </svg>
             </div>
           </div>
 
@@ -259,8 +319,8 @@
         <div class="order-divider order-divider--thick"></div>
 
         <div class="order-row order-row--total">
-          <span>Total</span>
-          <span id="r-total"></span>
+          <span class="total-label">Total</span>
+          <span class="total-price" id="r-total"></span>
         </div>
 
         <div class="order-row order-row--tax">
@@ -281,35 +341,44 @@
         </div>
 
         <div class="success-body">
-          <!-- Coin + checkmark illustration -->
+          <!-- Silver stacked coins + green checkmark illustration -->
           <div class="success-coin" aria-hidden="true">
-            <svg viewBox="0 0 130 110" width="160" height="130">
+            <svg viewBox="0 0 138 112" width="158" height="128" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <radialGradient id="cg" cx="36%" cy="30%" r="65%">
-                  <stop offset="0%"   stop-color="#f5d060"/>
-                  <stop offset="45%"  stop-color="#d4980e"/>
-                  <stop offset="100%" stop-color="#8b6200"/>
+                <radialGradient id="cf" cx="38%" cy="32%" r="65%">
+                  <stop offset="0%"   stop-color="#eeeeee"/>
+                  <stop offset="55%"  stop-color="#c2c2c2"/>
+                  <stop offset="100%" stop-color="#8c8c8c"/>
                 </radialGradient>
-                <radialGradient id="cgInner" cx="40%" cy="35%" r="60%">
-                  <stop offset="0%"   stop-color="#fce57a"/>
-                  <stop offset="100%" stop-color="#b87c00"/>
-                </radialGradient>
-                <filter id="coinShadow">
-                  <feDropShadow dx="2" dy="4" stdDeviation="6" flood-color="rgba(0,0,0,0.5)"/>
+                <filter id="ds" x="-20%" y="-20%" width="140%" height="150%">
+                  <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="rgba(0,0,0,0.45)"/>
+                </filter>
+                <filter id="gs" x="-30%" y="-30%" width="160%" height="160%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="8" flood-color="rgba(34,197,94,0.5)"/>
                 </filter>
               </defs>
-              <!-- Coin body -->
-              <ellipse cx="56" cy="55" rx="46" ry="44" fill="url(#cg)" filter="url(#coinShadow)"/>
-              <!-- Coin inner ring -->
-              <ellipse cx="56" cy="55" rx="40" ry="38" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
-              <!-- Dollar sign -->
-              <text x="56" y="68" text-anchor="middle" font-size="34" font-weight="700"
-                fill="rgba(255,255,255,0.35)" font-family="Georgia, 'Times New Roman', serif">$</text>
+
+              <!-- Coin 3 (back) -->
+              <ellipse cx="58" cy="72" rx="48" ry="10" fill="#787878" opacity="0.75"/>
+              <rect x="10" y="60" width="96" height="12" fill="#909090"/>
+              <ellipse cx="58" cy="60" rx="48" ry="10" fill="url(#cf)"/>
+
+              <!-- Coin 2 (middle) -->
+              <ellipse cx="58" cy="57" rx="48" ry="10" fill="#868686" opacity="0.75"/>
+              <rect x="10" y="45" width="96" height="12" fill="#9e9e9e"/>
+              <ellipse cx="58" cy="45" rx="48" ry="10" fill="url(#cf)"/>
+
+              <!-- Coin 1 (front) — with drop shadow -->
+              <ellipse cx="58" cy="42" rx="48" ry="10" fill="#949494" opacity="0.6" filter="url(#ds)"/>
+              <rect x="10" y="30" width="96" height="12" fill="#acacac"/>
+              <ellipse cx="58" cy="30" rx="48" ry="10" fill="url(#cf)" filter="url(#ds)"/>
+              <!-- Inner ring highlight -->
+              <ellipse cx="58" cy="30" rx="40" ry="7.5" fill="none" stroke="rgba(255,255,255,0.38)" stroke-width="1.2"/>
+
               <!-- Green checkmark circle -->
-              <circle cx="93" cy="82" r="24" fill="#1a7a2a"/>
-              <circle cx="93" cy="82" r="21" fill="#22c55e"/>
-              <!-- Checkmark -->
-              <path d="M83 82l7 7 14-14" stroke="white" stroke-width="3.5"
+              <circle cx="104" cy="80" r="27" fill="#166534" filter="url(#gs)"/>
+              <circle cx="104" cy="80" r="24" fill="#22c55e"/>
+              <path d="M93 80l8 8 14-14" stroke="white" stroke-width="3.5"
                 stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             </svg>
           </div>

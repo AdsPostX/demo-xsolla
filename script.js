@@ -96,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Fire MomentScience moment after success is visible
       // Save for Later is included automatically via pub_user_id in AdpxUser
+      window.msSuccessVisible = true;
       setTimeout(function() {
         triggerMomentScience();
       }, 1500);
@@ -107,28 +108,38 @@ document.addEventListener('DOMContentLoaded', function() {
   // MomentScience SDK trigger
   // ---------------------------------------------------------------------------
   function triggerMomentScience() {
-    // SDK loaded via async script tag in <head>
-    // Try Adpx.show() — if SDK isn't ready yet, poll briefly
     var attempts = 0;
-    var maxAttempts = 20;
+    var maxAttempts = 40; // poll up to 12 seconds
 
     function tryShow() {
       attempts++;
+
       if (window.Adpx && typeof window.Adpx.show === 'function') {
+        // SDK ready — show the moment
         window.Adpx.show();
-        console.log('[MomentScience] Moment triggered');
+        console.log('[MomentScience] show() called');
+
       } else if (window.Adpx && typeof window.Adpx.init === 'function') {
+        // SDK present but needs manual init
         window.Adpx.init(window.AdpxConfig, window.AdpxCallback);
-        window.Adpx.show();
-        console.log('[MomentScience] Init + show');
+        setTimeout(function() {
+          if (window.Adpx && window.Adpx.show) {
+            window.Adpx.show();
+            console.log('[MomentScience] init + show() called');
+          }
+        }, 400);
+
       } else if (attempts < maxAttempts) {
+        // Not ready yet — keep polling
         setTimeout(tryShow, 300);
+
       } else {
-        console.warn('[MomentScience] SDK not ready after', attempts, 'attempts');
+        console.warn('[MomentScience] SDK unavailable after', attempts, 'attempts');
       }
     }
 
-    tryShow();
+    // Small extra delay on first call to let the SDK fully initialize
+    setTimeout(tryShow, 200);
   }
 
   // ---------------------------------------------------------------------------

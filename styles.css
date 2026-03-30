@@ -179,9 +179,16 @@ html, body {
 }
 .order-row--total {
   color: var(--text);
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 500;
   margin: 12px 0 4px;
+  align-items: center;
+}
+.total-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  align-self: center;
 }
 .order-row--tax {
   font-size: 13px;
@@ -272,10 +279,26 @@ html, body {
   border: none; border-radius: 7px;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: background 100ms;
+  transition: background 100ms, box-shadow 100ms;
 }
 .wallet-btn:hover { background: #f0f0f0; }
 .wallet-btn:active { background: #e6e6e6; }
+
+/* Inner layout for both wallet buttons */
+.wallet-inner {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.wallet-label {
+  font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Segoe UI', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+.gpay-label       { color: #3c4043; }
+.apple-pay-label  { color: #000; font-weight: 600; }
 
 /* =============================================================================
    PAYMENT TABS
@@ -344,23 +367,24 @@ html, body {
 .input-wrap .form-input { margin-bottom: 0; }
 
 /* Card number with brand icons */
-.input-wrap--card .form-input { padding-right: 108px; }
+.input-wrap--card .form-input {
+  padding-right: 152px;
+  border-color: rgba(71, 183, 75, 0.3);
+}
+.input-wrap--card .form-input:focus {
+  border-color: rgba(71, 183, 75, 0.75);
+}
 .card-brands {
   position: absolute; right: 9px; top: 50%;
   transform: translateY(-50%);
-  display: flex; align-items: center; gap: 3px;
+  display: flex; align-items: center; gap: 4px;
 }
-.brand {
-  font-size: 8.5px; font-weight: 700;
-  padding: 2px 4px;
+.brand-svg {
+  display: block;
+  flex-shrink: 0;
   border-radius: 2px;
-  line-height: 1.1;
+  overflow: visible;
 }
-.brand--visa  { color: #1a1f71; background: #fff; font-style: italic; letter-spacing: 0.05em; }
-.brand--mc    { color: #eb001b; background: #fff; }
-.brand--amex  { color: #007bc1; background: #fff; }
-.brand--jcb   { color: #003087; background: #fff; }
-.brand--disc  { color: #e65c1a; background: #fff; }
 
 /* Expiry + CVV row */
 .input-row {
@@ -393,6 +417,14 @@ html, body {
   pointer-events: none; color: var(--text-muted);
 }
 .form-input--zip { padding-left: 30px; }
+
+/* Total price — larger than rest of row */
+.total-price {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
 
 /* Pay button */
 .btn-pay {
