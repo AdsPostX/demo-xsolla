@@ -122,30 +122,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ---------------------------------------------------------------------------
   // Creative selection — pick the best image from offer.creatives[]
-  // Priority: hero_image > offer_image > is_primary > offer.image
-  // Returns { url, isHero, iconUrl }
+  // Creative selection — always pick a square/square-ish image for layout consistency.
+  // Returns { url, iconUrl }
+  //
+  // Priority:
+  //   1. offer_image  — purpose-built 1200×1200 square (best quality, guaranteed square)
+  //   2. non-hero is_primary — primary creative that isn't a wide banner
+  //   3. offer.image  — API-level fallback field
+  //   4. icon_image   — last resort (small but square)
+  //
+  // hero_image (3.57:1 wide banner) is explicitly excluded at every level — it's built
+  // for white/light backgrounds and crops badly in a fixed-height dark container.
   // ---------------------------------------------------------------------------
   function selectCreatives(offer) {
-    // Skip hero_image — designed for white/light backgrounds, looks wrong in dark card.
-    // Consistent square treatment across all offers is better than inconsistent hero mix.
-    // Priority: offer_image (purpose-built, high-res) > is_primary > offer.image
     var creatives = offer.creatives || [];
-    var offerIm = null;
-    var primary = null;
-    var icon    = null;
+    var offerIm  = null;
+    var primary  = null;
+    var icon     = null;
 
     creatives.forEach(function(c) {
-      if (c.creative_type === 'offer_image' && !offerIm) offerIm = c;
-      if (c.creative_type === 'icon_image')               icon    = c;
-      if (c.is_primary)                                   primary = c;
+      var type = c.creative_type || '';
+      if (type === 'hero_image') return; // always skip — wrong aspect ratio + bg assumption
+
+      if (type === 'offer_image' && !offerIm) offerIm = c;
+      if (type === 'icon_image'  && !icon)    icon    = c;
+      // Only treat as primary if it's not a hero-type (belt + suspenders)
+      if (c.is_primary && type !== 'hero_image' && !primary) primary = c;
     });
 
+    // offer_image first, then non-hero primary, then offer.image root field, then icon
     var best   = offerIm || primary;
-    var imgUrl = (best && best.url) || offer.image || '';
+    var imgUrl = (best && best.url) || offer.image || (icon ? icon.url : '');
 
     return {
       url:     imgUrl,
-      isHero:  false,
       iconUrl: icon ? icon.url : ''
     };
   }
@@ -235,9 +245,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (creatives.url) {
       imgEl.src = creatives.url;
       imgEl.alt = offer.advertiser_name || 'Sponsored offer';
-      // Hero images: contain (don't crop the wide banner); squares: cover
-      imageWrap.classList.toggle('ms-image-wrap--hero',   creatives.isHero);
-      imageWrap.classList.toggle('ms-image-wrap--square', !creatives.isHero);
       imageWrap.hidden = false;
     } else {
       imageWrap.hidden = true;

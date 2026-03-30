@@ -638,41 +638,25 @@ html, body {
 /* Offer image — base */
 .ms-image-wrap {
   width: 100%;
+  height: 170px;           /* fixed height — same slot for every offer */
   overflow: hidden;
-  background: #0d0a05;
+  background: #0d0a05;    /* dark fill — letterbox gaps blend into the card */
   position: relative;
+  flex-shrink: 0;
 }
 .ms-image-wrap::after {
   content: '';
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: 60px;
-  background: linear-gradient(to bottom, transparent, #1a1108);
+  height: 50px;
+  background: linear-gradient(to bottom, transparent, #130e05);
   pointer-events: none;
 }
-.ms-image { width: 100%; display: block; }
-
-/* Square image (logo, offer_image) — fixed height, cover crop */
-.ms-image-wrap--square {
-  height: 170px;
-}
-.ms-image-wrap--square .ms-image {
+.ms-image {
+  width: 100%;
   height: 100%;
-  object-fit: cover;
-}
-
-/* Hero image (wide banner ~3.57:1) — natural height, contain so nothing crops */
-.ms-image-wrap--hero {
-  height: auto;
-  background: #fff; /* white bg: hero images are designed for light backgrounds */
-}
-.ms-image-wrap--hero .ms-image {
-  height: auto;
-  object-fit: contain;
-  max-height: 130px;
-}
-.ms-image-wrap--hero::after {
-  height: 32px; /* shorter scrim for hero — less to fade */
+  display: block;
+  object-fit: contain;   /* never crop — always show full image regardless of aspect ratio */
 }
 
 /* Body */
