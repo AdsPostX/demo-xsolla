@@ -636,27 +636,24 @@ html, body {
 }
 
 /* Offer image — base */
+/* Logo image container — sized for brand icons (square, ~150-250px source) */
 .ms-image-wrap {
   width: 100%;
-  height: 170px;           /* fixed height — same slot for every offer */
-  overflow: hidden;
-  background: #0d0a05;    /* dark fill — letterbox gaps blend into the card */
+  padding: 20px 0 16px;   /* breathing room around the logo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #100c04;    /* slightly lighter than card bg — subtle stage for the logo */
   position: relative;
   flex-shrink: 0;
-}
-.ms-image-wrap::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 50px;
-  background: linear-gradient(to bottom, transparent, #130e05);
-  pointer-events: none;
+  border-bottom: 1px solid rgba(205,145,30,0.18);
 }
 .ms-image {
-  width: 100%;
-  height: 100%;
+  width: 96px;
+  height: 96px;
   display: block;
-  object-fit: contain;   /* never crop — always show full image regardless of aspect ratio */
+  object-fit: contain;    /* show full logo, no cropping */
+  border-radius: 16px;    /* rounded corners — standard for app/brand icons */
 }
 
 /* Body */

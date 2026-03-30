@@ -122,41 +122,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ---------------------------------------------------------------------------
   // Creative selection — pick the best image from offer.creatives[]
-  // Creative selection — always pick a square/square-ish image for layout consistency.
-  // Returns { url, iconUrl }
+  // Creative selection — use icon_image (brand logo) exclusively for all offers.
+  // Returns { url }
   //
-  // Priority:
-  //   1. offer_image  — purpose-built 1200×1200 square (best quality, guaranteed square)
-  //   2. non-hero is_primary — primary creative that isn't a wide banner
-  //   3. offer.image  — API-level fallback field
-  //   4. icon_image   — last resort (small but square)
-  //
-  // hero_image (3.57:1 wide banner) is explicitly excluded at every level — it's built
-  // for white/light backgrounds and crops badly in a fixed-height dark container.
+  // icon_image is the one asset guaranteed to be consistent across every offer —
+  // always a clean square brand logo on a transparent/white bg. offer_image and
+  // hero_image vary wildly in aspect ratio and content, causing layout inconsistency.
   // ---------------------------------------------------------------------------
   function selectCreatives(offer) {
     var creatives = offer.creatives || [];
-    var offerIm  = null;
-    var primary  = null;
-    var icon     = null;
+    var icon = null;
 
     creatives.forEach(function(c) {
-      var type = c.creative_type || '';
-      if (type === 'hero_image') return; // always skip — wrong aspect ratio + bg assumption
-
-      if (type === 'offer_image' && !offerIm) offerIm = c;
-      if (type === 'icon_image'  && !icon)    icon    = c;
-      // Only treat as primary if it's not a hero-type (belt + suspenders)
-      if (c.is_primary && type !== 'hero_image' && !primary) primary = c;
+      if (c.creative_type === 'icon_image' && !icon) icon = c;
     });
 
-    // offer_image first, then non-hero primary, then offer.image root field, then icon
-    var best   = offerIm || primary;
-    var imgUrl = (best && best.url) || offer.image || (icon ? icon.url : '');
-
     return {
-      url:     imgUrl,
-      iconUrl: icon ? icon.url : ''
+      url: icon ? icon.url : (offer.image || '')
     };
   }
 
@@ -237,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
       new Image().src = offer.pixel;
     }
 
-    // Smart creative selection
+    // Logo image (icon_image) — consistent brand logo for every offer
     var creatives  = selectCreatives(offer);
     var imageWrap  = document.getElementById('ms-image-wrap');
     var imgEl      = document.getElementById('ms-image');
@@ -250,14 +232,9 @@ document.addEventListener('DOMContentLoaded', function() {
       imageWrap.hidden = true;
     }
 
-    // Brand icon alongside advertiser name
+    // Hide the redundant inline brand icon — logo is now in the main image slot
     var iconEl = document.getElementById('ms-brand-icon');
-    if (creatives.iconUrl && iconEl) {
-      iconEl.src   = creatives.iconUrl;
-      iconEl.style.display = 'inline-block';
-    } else if (iconEl) {
-      iconEl.style.display = 'none';
-    }
+    if (iconEl) iconEl.style.display = 'none';
 
     // Text content — prefer short_description, fall back to description
     setText('ms-advertiser', offer.advertiser_name || '');
