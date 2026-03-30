@@ -362,7 +362,7 @@
   <div class="ms-overlay" id="ms-overlay" hidden>
     <div class="ms-card" id="ms-card">
 
-      <!-- Gold ribbon header -->
+      <!-- Gold ribbon header — full width -->
       <div class="ms-ribbon">
         <div class="ms-ribbon-inner">
           <span class="ms-ribbon-bolt">⚡</span>
@@ -375,37 +375,37 @@
         </button>
       </div>
 
-      <!-- Offer image -->
-      <div class="ms-image-wrap" id="ms-image-wrap">
-        <img class="ms-image" id="ms-image" src="" alt="">
+      <!-- Horizontal content: logo left | copy + CTAs right -->
+      <div class="ms-content">
+
+        <!-- Left column: brand logo -->
+        <div class="ms-image-wrap" id="ms-image-wrap">
+          <img class="ms-image" id="ms-image" src="" alt="">
+        </div>
+
+        <!-- Right column: copy + CTAs -->
+        <div class="ms-body">
+
+          <!-- T&C tag — top right corner -->
+          <div class="ms-tc-wrap" id="ms-tc-wrap">
+            <button class="ms-tc-tag" id="ms-tc-toggle" aria-expanded="false">T&amp;C</button>
+            <div class="ms-tc-text" id="ms-tc-text"></div>
+          </div>
+
+          <p class="ms-advertiser" id="ms-advertiser"></p>
+          <h2 class="ms-title" id="ms-title"></h2>
+          <p class="ms-desc" id="ms-desc"></p>
+
+          <div class="ms-btn-row">
+            <button class="ms-btn ms-btn--claim" id="ms-cta-claim">Claim Reward</button>
+            <button class="ms-btn ms-btn--save" id="ms-cta-save">SAVE FOR LATER</button>
+          </div>
+        </div>
       </div>
 
-      <!-- Offer body -->
-      <div class="ms-body">
-
-        <!-- T&C corner tag (absolute) -->
-        <div class="ms-tc-wrap" id="ms-tc-wrap">
-          <button class="ms-tc-tag" id="ms-tc-toggle" aria-expanded="false">T&amp;C</button>
-          <div class="ms-tc-text" id="ms-tc-text"></div>
-        </div>
-
-        <div class="ms-brand-row">
-          <img class="ms-brand-icon" id="ms-brand-icon" src="" alt="" style="display:none">
-          <p class="ms-advertiser" id="ms-advertiser"></p>
-        </div>
-        <h2 class="ms-title" id="ms-title"></h2>
-        <p class="ms-desc" id="ms-desc"></p>
-
-        <!-- CTAs -->
-        <button class="ms-btn ms-btn--claim" id="ms-cta-claim">Claim Reward</button>
-        <button class="ms-btn ms-btn--save" id="ms-cta-save">SAVE FOR LATER</button>
-
-        <!-- Navigation dots -->
-        <div class="ms-footer-row">
-          <div class="ms-dots" id="ms-dots"></div>
-        </div>
-
-        <!-- Exclusive Offers pill -->
+      <!-- Footer: dots + exclusive offers pill -->
+      <div class="ms-footer">
+        <div class="ms-dots" id="ms-dots"></div>
         <a class="ms-offers-pill" id="ms-offers-link" href="#" target="_blank" rel="noopener">⭐ EXCLUSIVE OFFERS</a>
       </div>
 

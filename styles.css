@@ -538,15 +538,20 @@ html, body {
 /* =============================================================================
    MOMENTSCIENCE OFFER OVERLAY — Gaming UI (Hero Wars Dark Fantasy)
    ============================================================================= */
+/* ============================================================
+   MOMENTSCIENCE OFFER OVERLAY — wide horizontal layout
+   Matches the landscape format of Xsolla's own purchase modals
+   ============================================================ */
+
 .ms-overlay {
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: rgba(0, 0, 0, 0.78);
+  background: rgba(0, 0, 0, 0.80);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 20px;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   animation: msOverlayIn 0.20s ease both;
@@ -556,45 +561,45 @@ html, body {
   to   { opacity: 1; }
 }
 
-/* Card — dark fantasy loot chest aesthetic */
+/* Card — wide, landscape orientation */
 .ms-card {
-  background: linear-gradient(168deg, #231a0d 0%, #130e05 100%);
-  border-radius: 18px;
+  background: linear-gradient(160deg, #231a0d 0%, #130e05 100%);
+  border-radius: 16px;
   border: 2px solid rgba(205, 145, 30, 0.55);
   box-shadow:
     0 0 0 1px rgba(245, 185, 40, 0.12),
-    0 0 50px rgba(200, 120, 15, 0.32),
+    0 0 60px rgba(200, 120, 15, 0.28),
     0 32px 80px rgba(0, 0, 0, 0.92);
   width: 100%;
-  max-width: 374px;
+  max-width: 620px;         /* wide like Xsolla modals */
   overflow: hidden;
   animation: msCardIn 0.48s cubic-bezier(0.34, 1.4, 0.64, 1) both;
   animation-delay: 0.04s;
 }
 @keyframes msCardIn {
-  0%   { opacity: 0; transform: scale(0.82) translateY(26px); }
-  60%  { opacity: 1; transform: scale(1.025) translateY(-4px); }
+  0%   { opacity: 0; transform: scale(0.86) translateY(20px); }
+  60%  { opacity: 1; transform: scale(1.02) translateY(-3px); }
   75%  {
     box-shadow:
       0 0 0 1px rgba(245,185,40,0.18),
-      0 0 80px rgba(245,166,35,0.60),
+      0 0 90px rgba(245,166,35,0.55),
       0 32px 80px rgba(0,0,0,0.92);
   }
   100% {
     transform: scale(1) translateY(0);
     box-shadow:
       0 0 0 1px rgba(245,185,40,0.12),
-      0 0 50px rgba(200,120,15,0.32),
+      0 0 60px rgba(200,120,15,0.28),
       0 32px 80px rgba(0,0,0,0.92);
   }
 }
 
-/* Gold ribbon header */
+/* Gold ribbon header — spans full width */
 .ms-ribbon {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 13px 14px 12px;
+  padding: 12px 16px 11px;
   background: linear-gradient(90deg, #4a2e00 0%, #b87100 48%, #4a2e00 100%);
   border-bottom: 1px solid rgba(245, 166, 35, 0.4);
   position: relative;
@@ -607,10 +612,10 @@ html, body {
   pointer-events: none;
 }
 .ms-ribbon-inner { display: flex; align-items: center; }
-.ms-ribbon-bolt  { font-size: 17px; margin-right: 8px; line-height: 1; }
+.ms-ribbon-bolt  { font-size: 16px; margin-right: 8px; line-height: 1; }
 .ms-ribbon-label {
   font-family: 'Oswald', -apple-system, sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.14em;
   color: #fff;
@@ -635,47 +640,57 @@ html, body {
   color: #fff;
 }
 
-/* Offer image — base */
-/* Logo image container — sized for brand icons (square, ~150-250px source) */
+/* ── Horizontal content row ── */
+.ms-content {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  min-height: 200px;
+}
+
+/* Left column: brand logo */
 .ms-image-wrap {
-  width: 100%;
-  padding: 20px 0 16px;   /* breathing room around the logo */
+  width: 180px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #100c04;    /* slightly lighter than card bg — subtle stage for the logo */
-  position: relative;
-  flex-shrink: 0;
-  border-bottom: 1px solid rgba(205,145,30,0.18);
+  background: #0e0a03;
+  border-right: 1px solid rgba(205, 145, 30, 0.20);
+  padding: 24px 20px;
 }
 .ms-image {
-  width: 96px;
-  height: 96px;
+  width: 110px;
+  height: 110px;
   display: block;
-  object-fit: contain;    /* show full logo, no cropping */
-  border-radius: 16px;    /* rounded corners — standard for app/brand icons */
+  object-fit: contain;
+  border-radius: 20px;
 }
 
-/* Body */
+/* Right column: copy + CTAs */
 .ms-body {
-  padding: 13px 18px 14px;
+  flex: 1;
+  padding: 18px 20px 16px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-/* T&C corner tag */
+/* T&C tag — top right of body */
 .ms-tc-wrap {
   position: absolute;
-  top: 12px; right: 15px;
+  top: 12px; right: 14px;
   z-index: 5;
 }
 .ms-tc-tag {
   background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 4px;
   font-family: var(--font);
   font-size: 9px; font-weight: 700;
   letter-spacing: 0.07em;
-  color: rgba(255, 255, 255, 0.38);
+  color: rgba(255, 255, 255, 0.35);
   padding: 3px 6px;
   cursor: pointer;
   text-transform: uppercase;
@@ -688,7 +703,7 @@ html, body {
 .ms-tc-text {
   position: absolute;
   top: calc(100% + 6px); right: 0;
-  width: 220px;
+  width: 210px;
   background: rgba(18, 12, 4, 0.97);
   border: 1px solid rgba(245, 166, 35, 0.22);
   border-radius: 8px;
@@ -700,54 +715,43 @@ html, body {
 }
 .ms-tc-text.is-open { display: block; }
 
-/* Brand row: icon + advertiser name */
-.ms-brand-row {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 5px;
-  padding-right: 42px; /* clear T&C tag */
-}
-.ms-brand-icon {
-  width: 20px; height: 20px;
-  border-radius: 4px;
-  object-fit: contain;
-  flex-shrink: 0;
-  background: rgba(255,255,255,0.08);
-}
-
 /* Advertiser / title / desc */
 .ms-advertiser {
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.36);
-  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.34);
+  margin-bottom: 4px;
 }
 .ms-title {
   font-family: 'Oswald', -apple-system, sans-serif;
-  font-size: 21px;
+  font-size: 22px;
   font-weight: 700;
   color: #ffffff;
-  line-height: 1.18;
+  line-height: 1.15;
   letter-spacing: 0.01em;
-  margin-bottom: 7px;
-  padding-right: 10px;
+  margin-bottom: 6px;
+  padding-right: 36px; /* clear T&C tag */
 }
 .ms-desc {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.56);
-  line-height: 1.50;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.52);
+  line-height: 1.48;
   margin-bottom: 14px;
 }
 
-/* Buttons — 3D pressable game style */
+/* Buttons — 3D pressable, side by side in wide layout */
+.ms-btn-row {
+  display: flex;
+  gap: 10px;
+}
 .ms-btn {
-  width: 100%; height: 50px;
+  flex: 1;
+  height: 46px;
   border-radius: 10px;
   font-family: var(--font);
-  font-size: 15px; font-weight: 700;
+  font-size: 13px; font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
@@ -765,11 +769,8 @@ html, body {
   color: #fff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.40);
   box-shadow: 0 5px 0 #1e6b22, 0 8px 18px rgba(0, 0, 0, 0.50);
-  margin-bottom: 9px;
 }
-.ms-btn--claim:hover:not(:disabled) {
-  filter: brightness(1.07);
-}
+.ms-btn--claim:hover:not(:disabled) { filter: brightness(1.07); }
 .ms-btn--claim:active:not(:disabled) {
   transform: translateY(4px);
   box-shadow: 0 1px 0 #1e6b22, 0 3px 8px rgba(0, 0, 0, 0.40);
@@ -782,26 +783,24 @@ html, body {
   color: #fff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
   box-shadow: 0 5px 0 #7c4d00, 0 8px 18px rgba(0, 0, 0, 0.50);
-  margin-bottom: 14px;
 }
-.ms-btn--save:hover:not(:disabled) {
-  filter: brightness(1.06);
-}
+.ms-btn--save:hover:not(:disabled) { filter: brightness(1.06); }
 .ms-btn--save:active:not(:disabled) {
   transform: translateY(4px);
   box-shadow: 0 1px 0 #7c4d00, 0 3px 8px rgba(0, 0, 0, 0.40);
 }
 
-/* Navigation dots — centered */
-.ms-footer-row {
+/* ── Footer: dots + exclusive offers pill ── */
+.ms-footer {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 11px;
+  justify-content: space-between;
+  padding: 10px 20px 10px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
-.ms-dots { display: flex; gap: 8px; align-items: center; }
+.ms-dots { display: flex; gap: 7px; align-items: center; }
 .ms-dot {
-  width: 8px; height: 8px;
+  width: 7px; height: 7px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.18);
   border: none; cursor: pointer; padding: 0;
@@ -809,23 +808,23 @@ html, body {
 }
 .ms-dot--active {
   background: #f5a623;
-  transform: scale(1.35);
+  transform: scale(1.40);
 }
 
-/* Exclusive Offers pill button */
+/* Exclusive Offers pill — right side of footer */
 .ms-offers-pill {
-  display: block;
-  text-align: center;
-  border: 2px solid rgba(245, 166, 35, 0.42);
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid rgba(245, 166, 35, 0.45);
   border-radius: 30px;
-  padding: 9px 20px;
-  font-size: 12px; font-weight: 700;
-  letter-spacing: 0.09em;
+  padding: 6px 14px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #f5a623;
   text-decoration: none;
   transition: background 130ms, border-color 130ms, color 130ms;
-  margin-bottom: 2px;
+  white-space: nowrap;
 }
 .ms-offers-pill:hover {
   background: rgba(245, 166, 35, 0.10);
@@ -835,10 +834,10 @@ html, body {
 
 /* Attribution */
 .ms-attribution {
-  padding: 8px 18px;
+  padding: 6px 20px 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
-  font-size: 10.5px;
-  color: rgba(255, 255, 255, 0.18);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.16);
   text-align: center;
 }
-.ms-attribution strong { color: rgba(255, 255, 255, 0.32); }
+.ms-attribution strong { color: rgba(255, 255, 255, 0.28); }
