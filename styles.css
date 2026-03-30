@@ -635,10 +635,9 @@ html, body {
   color: #fff;
 }
 
-/* Offer image */
+/* Offer image — base */
 .ms-image-wrap {
   width: 100%;
-  height: 170px;
   overflow: hidden;
   background: #0d0a05;
   position: relative;
@@ -647,14 +646,33 @@ html, body {
   content: '';
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: 70px;
+  height: 60px;
   background: linear-gradient(to bottom, transparent, #1a1108);
   pointer-events: none;
 }
-.ms-image {
-  width: 100%; height: 100%;
+.ms-image { width: 100%; display: block; }
+
+/* Square image (logo, offer_image) — fixed height, cover crop */
+.ms-image-wrap--square {
+  height: 170px;
+}
+.ms-image-wrap--square .ms-image {
+  height: 100%;
   object-fit: cover;
-  display: block;
+}
+
+/* Hero image (wide banner ~3.57:1) — natural height, contain so nothing crops */
+.ms-image-wrap--hero {
+  height: auto;
+  background: #fff; /* white bg: hero images are designed for light backgrounds */
+}
+.ms-image-wrap--hero .ms-image {
+  height: auto;
+  object-fit: contain;
+  max-height: 130px;
+}
+.ms-image-wrap--hero::after {
+  height: 32px; /* shorter scrim for hero — less to fade */
 }
 
 /* Body */
@@ -701,6 +719,22 @@ html, body {
 }
 .ms-tc-text.is-open { display: block; }
 
+/* Brand row: icon + advertiser name */
+.ms-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 5px;
+  padding-right: 42px; /* clear T&C tag */
+}
+.ms-brand-icon {
+  width: 20px; height: 20px;
+  border-radius: 4px;
+  object-fit: contain;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.08);
+}
+
 /* Advertiser / title / desc */
 .ms-advertiser {
   font-size: 10.5px;
@@ -708,8 +742,7 @@ html, body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.36);
-  margin-bottom: 5px;
-  padding-right: 42px; /* clear T&C tag */
+  margin-bottom: 0;
 }
 .ms-title {
   font-family: 'Oswald', -apple-system, sans-serif;

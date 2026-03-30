@@ -114,10 +114,41 @@ document.addEventListener('DOMContentLoaded', function() {
   // MomentScience — REST API integration
   // POST https://api.adspostx.com/native/v2/offers.json?api_key=KEY
   // ---------------------------------------------------------------------------
-  var msCfg     = cfg.momentscience;
-  var msOffers  = [];
-  var msIdx     = 0;
-  var msOverlay = document.getElementById('ms-overlay');
+  var msCfg      = cfg.momentscience;
+  var msOffers   = [];
+  var msSettings = {};
+  var msIdx      = 0;
+  var msOverlay  = document.getElementById('ms-overlay');
+
+  // ---------------------------------------------------------------------------
+  // Creative selection — pick the best image from offer.creatives[]
+  // Priority: hero_image > offer_image > is_primary > offer.image
+  // Returns { url, isHero, iconUrl }
+  // ---------------------------------------------------------------------------
+  function selectCreatives(offer) {
+    var creatives = offer.creatives || [];
+    var hero    = null;
+    var offerIm = null;
+    var primary = null;
+    var icon    = null;
+
+    creatives.forEach(function(c) {
+      if (c.creative_type === 'hero_image')  hero    = c;
+      if (c.creative_type === 'offer_image' && !offerIm) offerIm = c;
+      if (c.creative_type === 'icon_image')  icon    = c;
+      if (c.is_primary)                      primary = c;
+    });
+
+    var best   = hero || offerIm || primary;
+    var imgUrl = (best && best.url) || offer.image || '';
+    var isHero = !!(hero);
+
+    return {
+      url:     imgUrl,
+      isHero:  isHero,
+      iconUrl: icon ? icon.url : ''
+    };
+  }
 
   function fetchMSOffers() {
     var url = 'https://api.adspostx.com/native/v2/offers.json?api_key=' + msCfg.apiKey;
@@ -147,6 +178,9 @@ document.addEventListener('DOMContentLoaded', function() {
       var offers = (data && data.data && Array.isArray(data.data.offers))
         ? data.data.offers : [];
 
+      // Capture settings from API response
+      msSettings = (data && data.data && data.data.settings) || {};
+
       if (offers.length === 0) {
         console.log('[MS] No offers returned');
         return;
@@ -154,6 +188,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
       msOffers = offers.slice(0, msCfg.maxOffers || 3);
       msIdx    = 0;
+
+      // Apply close delay from API settings
+      var closeBtn   = document.getElementById('ms-close');
+      var closeDelay = msSettings.enable_close_delay ? (msSettings.close_delay || 0) : 0;
+      if (closeDelay > 0) {
+        closeBtn.style.visibility = 'hidden';
+        closeBtn.style.pointerEvents = 'none';
+        setTimeout(function() {
+          closeBtn.style.visibility = '';
+          closeBtn.style.pointerEvents = '';
+        }, closeDelay * 1000);
+      }
+
+      // Update SFL button label from API settings
+      var sflLabel = msSettings.perkswallet_cta || 'SAVE FOR LATER';
+      document.getElementById('ms-cta-save').textContent = sflLabel.toUpperCase();
+
+      // Update Exclusive Offers pill label from API settings
+      var pillEl = document.getElementById('ms-offers-link');
+      var pillLabel = msSettings.offerwall_cta || 'Exclusive Offers';
+      pillEl.textContent = '⭐ ' + pillLabel.toUpperCase();
+
       renderMSOffer(msIdx);
       msOverlay.hidden = false;
     })
@@ -171,24 +227,36 @@ document.addEventListener('DOMContentLoaded', function() {
       new Image().src = offer.pixel;
     }
 
-    // Image
-    var imageWrap = document.getElementById('ms-image-wrap');
-    var imgEl     = document.getElementById('ms-image');
-    var imgSrc = offer.image ||
-      (offer.creatives && offer.creatives[0] && offer.creatives[0].url) || '';
+    // Smart creative selection
+    var creatives  = selectCreatives(offer);
+    var imageWrap  = document.getElementById('ms-image-wrap');
+    var imgEl      = document.getElementById('ms-image');
 
-    if (imgSrc) {
-      imgEl.src = imgSrc;
+    if (creatives.url) {
+      imgEl.src = creatives.url;
       imgEl.alt = offer.advertiser_name || 'Sponsored offer';
+      // Hero images: contain (don't crop the wide banner); squares: cover
+      imageWrap.classList.toggle('ms-image-wrap--hero',   creatives.isHero);
+      imageWrap.classList.toggle('ms-image-wrap--square', !creatives.isHero);
       imageWrap.hidden = false;
     } else {
       imageWrap.hidden = true;
     }
 
-    // Text content
+    // Brand icon alongside advertiser name
+    var iconEl = document.getElementById('ms-brand-icon');
+    if (creatives.iconUrl && iconEl) {
+      iconEl.src   = creatives.iconUrl;
+      iconEl.style.display = 'inline-block';
+    } else if (iconEl) {
+      iconEl.style.display = 'none';
+    }
+
+    // Text content — prefer short_description, fall back to description
     setText('ms-advertiser', offer.advertiser_name || '');
-    setText('ms-title',      offer.title || offer.short_headline || '');
-    setText('ms-desc',       offer.short_description || offer.description || '');
+    setText('ms-title', offer.title || offer.short_headline || '');
+    // short_description is tighter — better fit for the card
+    setText('ms-desc',  offer.short_description || offer.description || '');
 
     // T&C
     var tcWrap   = document.getElementById('ms-tc-wrap');
@@ -244,21 +312,24 @@ document.addEventListener('DOMContentLoaded', function() {
       fetch(offer.save_for_later_url, { method: 'POST' })
         .then(function(r) { return r.json(); })
         .then(function(data) {
-          sflBtn.textContent = '✓ SAVED!';
+          var savedTxt = (msSettings.saved_offer_text || 'Saved').toUpperCase();
+          sflBtn.textContent = '✓ ' + savedTxt + '!';
           if (data && data.url) {
             window.open(data.url, '_blank', 'noopener');
           }
           setTimeout(function() { advanceMSOffer(); }, 900);
         })
         .catch(function() {
-          sflBtn.textContent = 'SAVE FOR LATER';
+          var sflLabel = (msSettings.perkswallet_cta || 'Save For Later').toUpperCase();
+          sflBtn.textContent = sflLabel;
           sflBtn.disabled    = false;
         });
 
     } else if (offer.offerwall_url) {
       // Fallback: open PerksWallet directly
       window.open(offer.offerwall_url, '_blank', 'noopener');
-      sflBtn.textContent = '✓ SAVED!';
+      var savedTxt2 = (msSettings.saved_offer_text || 'Saved').toUpperCase();
+      sflBtn.textContent = '✓ ' + savedTxt2 + '!';
       setTimeout(function() { advanceMSOffer(); }, 600);
 
     } else {
