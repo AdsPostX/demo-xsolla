@@ -126,26 +126,26 @@ document.addEventListener('DOMContentLoaded', function() {
   // Returns { url, isHero, iconUrl }
   // ---------------------------------------------------------------------------
   function selectCreatives(offer) {
+    // Skip hero_image — designed for white/light backgrounds, looks wrong in dark card.
+    // Consistent square treatment across all offers is better than inconsistent hero mix.
+    // Priority: offer_image (purpose-built, high-res) > is_primary > offer.image
     var creatives = offer.creatives || [];
-    var hero    = null;
     var offerIm = null;
     var primary = null;
     var icon    = null;
 
     creatives.forEach(function(c) {
-      if (c.creative_type === 'hero_image')  hero    = c;
       if (c.creative_type === 'offer_image' && !offerIm) offerIm = c;
-      if (c.creative_type === 'icon_image')  icon    = c;
-      if (c.is_primary)                      primary = c;
+      if (c.creative_type === 'icon_image')               icon    = c;
+      if (c.is_primary)                                   primary = c;
     });
 
-    var best   = hero || offerIm || primary;
+    var best   = offerIm || primary;
     var imgUrl = (best && best.url) || offer.image || '';
-    var isHero = !!(hero);
 
     return {
       url:     imgUrl,
-      isHero:  isHero,
+      isHero:  false,
       iconUrl: icon ? icon.url : ''
     };
   }
