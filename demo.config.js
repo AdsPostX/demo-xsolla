@@ -57,7 +57,7 @@ window.DEMO_CONFIG = {
   // API key: Dashboard → Profile Settings → API Keys → "Ads/Offers" permission
   // Uses direct POST to https://api.adspostx.com/native/v2/offers.json
   momentscience: {
-    apiKey:    "0bf14c41a03bfa38",  // API key — Profile Settings → API Keys → "Ads/Offers"
+    apiKey:    "fd49c407-3adb-4982-91ce-d0a37bcdc1f5",  // PerksWallet-enabled key
     placement: "order_confirmation",
     maxOffers: 3,
     devMode:   true,                // true = test offers, disables impression tracking
