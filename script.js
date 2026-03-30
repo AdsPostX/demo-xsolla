@@ -305,35 +305,37 @@ document.addEventListener('DOMContentLoaded', function() {
     var sflBtn = document.getElementById('ms-cta-save');
 
     if (offer.save_for_later_url) {
-      // Primary path: POST to SFL URL, then open redirect
+      // Open PerksWallet NOW — synchronously in the click handler.
+      // window.open inside fetch().then() is blocked by popup blockers (async context).
+      // The SFL POST response is {"message":"Offer saved successfully"} — no URL returned.
+      // We open offerwall_url directly as the PerksWallet destination.
+      window.open(offer.offerwall_url || 'https://perkswallet.com', '_blank', 'noopener');
+
       sflBtn.textContent = 'SAVING…';
       sflBtn.disabled    = true;
 
+      // POST to SFL endpoint in the background to persist the save server-side
       fetch(offer.save_for_later_url, { method: 'POST' })
         .then(function(r) { return r.json(); })
-        .then(function(data) {
+        .then(function() {
           var savedTxt = (msSettings.saved_offer_text || 'Saved').toUpperCase();
           sflBtn.textContent = '✓ ' + savedTxt + '!';
-          if (data && data.url) {
-            window.open(data.url, '_blank', 'noopener');
-          }
           setTimeout(function() { advanceMSOffer(); }, 900);
         })
         .catch(function() {
-          var sflLabel = (msSettings.perkswallet_cta || 'Save For Later').toUpperCase();
-          sflBtn.textContent = sflLabel;
-          sflBtn.disabled    = false;
+          // POST failed but PW already opened — still mark saved and advance
+          var savedTxt = (msSettings.saved_offer_text || 'Saved').toUpperCase();
+          sflBtn.textContent = '✓ ' + savedTxt + '!';
+          setTimeout(function() { advanceMSOffer(); }, 900);
         });
 
     } else if (offer.offerwall_url) {
-      // Fallback: open PerksWallet directly
       window.open(offer.offerwall_url, '_blank', 'noopener');
       var savedTxt2 = (msSettings.saved_offer_text || 'Saved').toUpperCase();
       sflBtn.textContent = '✓ ' + savedTxt2 + '!';
       setTimeout(function() { advanceMSOffer(); }, 600);
 
     } else {
-      // Last resort: advance to next offer
       advanceMSOffer();
     }
   }
