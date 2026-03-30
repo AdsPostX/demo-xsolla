@@ -283,23 +283,33 @@
         <div class="success-body">
           <!-- Coin + checkmark illustration -->
           <div class="success-coin" aria-hidden="true">
-            <svg viewBox="0 0 96 96" width="88" height="88">
+            <svg viewBox="0 0 130 110" width="160" height="130">
               <defs>
-                <radialGradient id="cg" cx="38%" cy="32%">
-                  <stop offset="0%" stop-color="#f0c040"/>
-                  <stop offset="55%" stop-color="#c8920c"/>
+                <radialGradient id="cg" cx="36%" cy="30%" r="65%">
+                  <stop offset="0%"   stop-color="#f5d060"/>
+                  <stop offset="45%"  stop-color="#d4980e"/>
                   <stop offset="100%" stop-color="#8b6200"/>
                 </radialGradient>
+                <radialGradient id="cgInner" cx="40%" cy="35%" r="60%">
+                  <stop offset="0%"   stop-color="#fce57a"/>
+                  <stop offset="100%" stop-color="#b87c00"/>
+                </radialGradient>
+                <filter id="coinShadow">
+                  <feDropShadow dx="2" dy="4" stdDeviation="6" flood-color="rgba(0,0,0,0.5)"/>
+                </filter>
               </defs>
-              <!-- Coin -->
-              <circle cx="44" cy="48" r="36" fill="url(#cg)"/>
-              <circle cx="44" cy="48" r="32" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
-              <text x="44" y="58" text-anchor="middle" font-size="26" font-weight="700"
-                fill="rgba(255,255,255,0.4)" font-family="Georgia, serif">$</text>
-              <!-- Green checkmark badge -->
-              <circle cx="70" cy="72" r="17" fill="#22c55e"/>
-              <circle cx="70" cy="72" r="14" fill="#16a34a"/>
-              <path d="M62 72l5.5 5.5 11-11" stroke="white" stroke-width="2.5"
+              <!-- Coin body -->
+              <ellipse cx="56" cy="55" rx="46" ry="44" fill="url(#cg)" filter="url(#coinShadow)"/>
+              <!-- Coin inner ring -->
+              <ellipse cx="56" cy="55" rx="40" ry="38" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+              <!-- Dollar sign -->
+              <text x="56" y="68" text-anchor="middle" font-size="34" font-weight="700"
+                fill="rgba(255,255,255,0.35)" font-family="Georgia, 'Times New Roman', serif">$</text>
+              <!-- Green checkmark circle -->
+              <circle cx="93" cy="82" r="24" fill="#1a7a2a"/>
+              <circle cx="93" cy="82" r="21" fill="#22c55e"/>
+              <!-- Checkmark -->
+              <path d="M83 82l7 7 14-14" stroke="white" stroke-width="3.5"
                 stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             </svg>
           </div>
