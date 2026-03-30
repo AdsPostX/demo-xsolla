@@ -210,23 +210,17 @@ document.addEventListener('DOMContentLoaded', function() {
     claimBtn.disabled    = false;
     claimBtn.onclick     = function() { handleClaim(offer); };
 
-    // Save for Later
+    // Save for Later — always visible (design element; fallback gracefully if no URL)
     var sflBtn = document.getElementById('ms-cta-save');
-    sflBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M7 4.5v2.8l1.5 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg> Save for Later';
-    sflBtn.disabled  = false;
-    sflBtn.onclick   = function() { handleSaveForLater(offer); };
+    sflBtn.textContent = 'SAVE FOR LATER';
+    sflBtn.disabled    = false;
+    sflBtn.hidden      = false;
+    sflBtn.onclick     = function() { handleSaveForLater(offer); };
 
-    // Hide SFL if no URL
-    sflBtn.hidden = !offer.save_for_later_url;
-
-    // PerksWallet link
+    // PerksWallet / Exclusive Offers link — always show with fallback
     var offersLink = document.getElementById('ms-offers-link');
-    if (offer.offerwall_enabled && offer.offerwall_url) {
-      offersLink.href   = offer.offerwall_url;
-      offersLink.hidden = false;
-    } else {
-      offersLink.hidden = true;
-    }
+    offersLink.href   = offer.offerwall_url || 'https://perkswallet.com';
+    offersLink.hidden = false;
 
     // Navigation dots
     renderMSDots(idx);
@@ -240,25 +234,37 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function handleSaveForLater(offer) {
-    if (!offer.save_for_later_url) return;
-
     var sflBtn = document.getElementById('ms-cta-save');
-    sflBtn.textContent = 'Saving…';
-    sflBtn.disabled    = true;
 
-    fetch(offer.save_for_later_url, { method: 'POST' })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        sflBtn.textContent = '✓ Saved!';
-        if (data && data.url) {
-          window.open(data.url, '_blank', 'noopener');
-        }
-        setTimeout(function() { advanceMSOffer(); }, 900);
-      })
-      .catch(function() {
-        sflBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M7 4.5v2.8l1.5 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg> Save for Later';
-        sflBtn.disabled  = false;
-      });
+    if (offer.save_for_later_url) {
+      // Primary path: POST to SFL URL, then open redirect
+      sflBtn.textContent = 'SAVING…';
+      sflBtn.disabled    = true;
+
+      fetch(offer.save_for_later_url, { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          sflBtn.textContent = '✓ SAVED!';
+          if (data && data.url) {
+            window.open(data.url, '_blank', 'noopener');
+          }
+          setTimeout(function() { advanceMSOffer(); }, 900);
+        })
+        .catch(function() {
+          sflBtn.textContent = 'SAVE FOR LATER';
+          sflBtn.disabled    = false;
+        });
+
+    } else if (offer.offerwall_url) {
+      // Fallback: open PerksWallet directly
+      window.open(offer.offerwall_url, '_blank', 'noopener');
+      sflBtn.textContent = '✓ SAVED!';
+      setTimeout(function() { advanceMSOffer(); }, 600);
+
+    } else {
+      // Last resort: advance to next offer
+      advanceMSOffer();
+    }
   }
 
   function advanceMSOffer() {
