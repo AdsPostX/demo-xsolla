@@ -403,10 +403,18 @@
         </div>
       </div>
 
-      <!-- Footer: dots + exclusive offers pill -->
+      <!-- Footer: prev/next + dots + exclusive offers pill -->
       <div class="ms-footer">
-        <div class="ms-dots" id="ms-dots"></div>
-        <a class="ms-offers-pill" id="ms-offers-link" href="#" target="_blank" rel="noopener">⭐ EXCLUSIVE OFFERS</a>
+        <div class="ms-nav-row">
+          <button class="ms-nav-btn" id="ms-prev" aria-label="Previous offer">
+            <svg width="10" height="16" viewBox="0 0 10 16" fill="none"><path d="M8 2L2 8l6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="ms-dots" id="ms-dots"></div>
+          <button class="ms-nav-btn" id="ms-next" aria-label="Next offer">
+            <svg width="10" height="16" viewBox="0 0 10 16" fill="none"><path d="M2 2l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <a class="ms-offers-pill" id="ms-offers-link" href="#" target="_blank" rel="noopener">⭐ MORE OFFERS</a>
       </div>
 
       <!-- Attribution -->

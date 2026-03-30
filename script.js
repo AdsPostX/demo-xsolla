@@ -354,7 +354,10 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function renderMSDots(activeIdx) {
-    var dotsEl = document.getElementById('ms-dots');
+    var dotsEl  = document.getElementById('ms-dots');
+    var prevBtn = document.getElementById('ms-prev');
+    var nextBtn = document.getElementById('ms-next');
+
     dotsEl.innerHTML = '';
     msOffers.forEach(function(_, i) {
       var dot = document.createElement('button');
@@ -366,6 +369,10 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       dotsEl.appendChild(dot);
     });
+
+    // Reflect position in arrow buttons
+    if (prevBtn) prevBtn.disabled = (activeIdx === 0);
+    if (nextBtn) nextBtn.disabled = (activeIdx >= msOffers.length - 1);
   }
 
   // T&C toggle
@@ -373,6 +380,14 @@ document.addEventListener('DOMContentLoaded', function() {
     var tcText = document.getElementById('ms-tc-text');
     var isOpen = tcText.classList.toggle('is-open');
     this.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  // Prev / Next offer navigation
+  document.getElementById('ms-prev').addEventListener('click', function() {
+    if (msIdx > 0) { msIdx--; renderMSOffer(msIdx); }
+  });
+  document.getElementById('ms-next').addEventListener('click', function() {
+    if (msIdx < msOffers.length - 1) { msIdx++; renderMSOffer(msIdx); }
   });
 
   // MS overlay close button
