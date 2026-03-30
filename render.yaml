@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: demo-xsolla-2026
+    env: static
+    buildCommand: ""
+    staticPublishPath: .
