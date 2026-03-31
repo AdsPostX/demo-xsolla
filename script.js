@@ -232,10 +232,11 @@ document.addEventListener('DOMContentLoaded', function() {
       imageWrap.hidden = true;
     }
 
-    // Text content — prefer short_description, fall back to description
+    // Text content
     setText('ms-advertiser', offer.advertiser_name || '');
-    setText('ms-title', offer.title || offer.short_headline || '');
-    // short_description is tighter — better fit for the card
+    // short_headline is punchy single-line copy; title is verbose SEO copy
+    setText('ms-title', offer.short_headline || offer.title || '');
+    // short_description fits the card better; fall back to description
     setText('ms-desc',  offer.short_description || offer.description || '');
 
     // T&C

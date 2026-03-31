@@ -675,25 +675,26 @@ html, body {
   border-right: 1px solid rgba(205, 145, 30, 0.18);
   padding: 28px 22px;
 }
-/* Show icon_image as-is — no background manipulation.
-   App icons (Apple Music, AAA) are self-contained designed assets and
-   look best without interference. White-bg logos are an asset quality
-   issue on the advertiser side, not something to patch with CSS. */
+/* Show icon_image with consistent corner radius.
+   App icons already have their own internal radius — 16px on the element
+   matches the standard iOS icon corner curvature and softens white-bg
+   rectangular logos without imposing a visible frame. */
 .ms-image {
   width: 124px;
   height: 124px;
   display: block;
   object-fit: contain;
+  border-radius: 16px;
 }
 
 /* Right column: copy + CTAs */
 .ms-body {
   flex: 1;
-  padding: 18px 20px 16px;
+  padding: 16px 20px 16px;
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start; /* top-align — prevents content floating mid-card */
 }
 
 /* T&C tag — top right of body */
@@ -736,34 +737,48 @@ html, body {
 
 /* Advertiser / title / desc */
 .ms-advertiser {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.09em;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.34);
-  margin-bottom: 4px;
+  /* Amber — makes the brand feel like a premium sponsor label, not fine print */
+  color: rgba(245, 166, 35, 0.82);
+  margin-bottom: 5px;
+  margin-top: 4px; /* align with logo vertical rhythm */
 }
 .ms-title {
   font-family: 'Oswald', -apple-system, sans-serif;
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 700;
   color: #ffffff;
-  line-height: 1.15;
+  line-height: 1.18;
   letter-spacing: 0.01em;
-  margin-bottom: 6px;
-  padding-right: 36px; /* clear T&C tag */
+  margin-bottom: 7px;
+  padding-right: 32px; /* clear T&C tag */
+  /* Hard cap at 2 lines — prevents 3-line title from breaking the layout */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .ms-desc {
   font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.52);
-  line-height: 1.48;
-  margin-bottom: 14px;
+  color: rgba(255, 255, 255, 0.58);
+  line-height: 1.5;
+  /* Cap at 2 lines — description supports, doesn't compete with the title */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 0;
+  flex: 1; /* pushes buttons to bottom of column */
 }
 
 /* Buttons — 3D pressable, side by side in wide layout */
 .ms-btn-row {
   display: flex;
   gap: 10px;
+  margin-top: 14px; /* consistent gap above buttons regardless of text length */
 }
 .ms-btn {
   flex: 1;
