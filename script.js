@@ -232,10 +232,6 @@ document.addEventListener('DOMContentLoaded', function() {
       imageWrap.hidden = true;
     }
 
-    // Hide the redundant inline brand icon — logo is now in the main image slot
-    var iconEl = document.getElementById('ms-brand-icon');
-    if (iconEl) iconEl.style.display = 'none';
-
     // Text content — prefer short_description, fall back to description
     setText('ms-advertiser', offer.advertiser_name || '');
     setText('ms-title', offer.title || offer.short_headline || '');

@@ -675,18 +675,15 @@ html, body {
   border-right: 1px solid rgba(205, 145, 30, 0.18);
   padding: 28px 22px;
 }
-/* White rounded card — intentional stage for every logo type.
-   Icons with colored bg look like app icons; logos on white look branded.
-   Eliminates the jarring dark-panel vs white-bg-logo clash. */
+/* Show icon_image as-is — no background manipulation.
+   App icons (Apple Music, AAA) are self-contained designed assets and
+   look best without interference. White-bg logos are an asset quality
+   issue on the advertiser side, not something to patch with CSS. */
 .ms-image {
-  width: 108px;
-  height: 108px;
+  width: 124px;
+  height: 124px;
   display: block;
   object-fit: contain;
-  border-radius: 18px;
-  background: #ffffff;
-  padding: 12px;
-  box-shadow: 0 2px 14px rgba(0,0,0,0.40);
 }
 
 /* Right column: copy + CTAs */
