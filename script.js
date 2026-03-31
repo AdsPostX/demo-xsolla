@@ -197,11 +197,6 @@ document.addEventListener('DOMContentLoaded', function() {
       var sflLabel = msSettings.perkswallet_cta || 'SAVE FOR LATER';
       document.getElementById('ms-cta-save').textContent = sflLabel.toUpperCase();
 
-      // Update Exclusive Offers pill label from API settings
-      var pillEl = document.getElementById('ms-offers-link');
-      var pillLabel = msSettings.offerwall_cta || 'Exclusive Offers';
-      pillEl.textContent = '⭐ ' + pillLabel.toUpperCase();
-
       renderMSOffer(msIdx);
       msOverlay.hidden = false;
     })
@@ -265,11 +260,6 @@ document.addEventListener('DOMContentLoaded', function() {
     sflBtn.disabled    = false;
     sflBtn.hidden      = false;
     sflBtn.onclick     = function() { handleSaveForLater(offer); };
-
-    // PerksWallet / Exclusive Offers link — always show with fallback
-    var offersLink = document.getElementById('ms-offers-link');
-    offersLink.href   = offer.offerwall_url || 'https://perkswallet.com';
-    offersLink.hidden = false;
 
     // Navigation dots
     renderMSDots(idx);

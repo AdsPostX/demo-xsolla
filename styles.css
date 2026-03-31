@@ -824,11 +824,11 @@ html, body {
   box-shadow: 0 1px 0 #7c4d00, 0 3px 8px rgba(0, 0, 0, 0.40);
 }
 
-/* ── Footer: nav controls + exclusive offers pill ── */
+/* ── Footer: nav controls centered ── */
 .ms-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 9px 18px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
@@ -875,27 +875,6 @@ html, body {
   transform: scale(1.40);
 }
 
-/* Exclusive Offers pill — right side of footer */
-.ms-offers-pill {
-  display: inline-flex;
-  align-items: center;
-  border: 1.5px solid rgba(245, 166, 35, 0.45);
-  border-radius: 30px;
-  padding: 6px 14px;
-  font-size: 11px; font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #f5a623;
-  text-decoration: none;
-  transition: background 130ms, border-color 130ms, color 130ms;
-  white-space: nowrap;
-}
-.ms-offers-pill:hover {
-  background: rgba(245, 166, 35, 0.10);
-  border-color: rgba(245, 166, 35, 0.72);
-  color: #ffc040;
-}
-
 /* Attribution */
 .ms-attribution {
   padding: 6px 20px 8px;
@@ -905,3 +884,66 @@ html, body {
   text-align: center;
 }
 .ms-attribution strong { color: rgba(255, 255, 255, 0.28); }
+
+/* =============================================================================
+   MOMENTSCIENCE — MOBILE (bottom sheet)
+   ============================================================================= */
+@media (max-width: 640px) {
+  /* Bottom sheet: overlay anchors to bottom of viewport */
+  .ms-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  /* Card: full width, rounded top corners only, slides up */
+  .ms-card {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    animation: ms-slide-up 0.32s cubic-bezier(0.34, 1.20, 0.64, 1) both;
+  }
+
+  /* Compact logo strip — horizontal with small logo */
+  .ms-image-wrap {
+    padding: 14px 16px;
+  }
+  .ms-image {
+    width: 72px;
+    height: 72px;
+    border-radius: 14px;
+  }
+
+  /* Tighter body on narrow screens */
+  .ms-body {
+    padding: 12px 14px 14px;
+  }
+
+  /* Smaller title on mobile */
+  .ms-title {
+    font-size: 17px;
+  }
+
+  /* Stack buttons vertically — full width, easy to tap, text never wraps */
+  .ms-btn-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ms-btn {
+    height: 44px;
+    font-size: 12.5px;
+  }
+
+  /* Larger touch targets on mobile */
+  .ms-nav-btn {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@keyframes ms-slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
