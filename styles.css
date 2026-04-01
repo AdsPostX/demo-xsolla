@@ -656,6 +656,9 @@ html, body {
   color: #fff;
 }
 
+/* Drag handle — hidden by default, shown on mobile */
+.ms-sheet-handle { display: none; }
+
 /* ── Horizontal content row ── */
 .ms-content {
   display: flex;
@@ -889,6 +892,16 @@ html, body {
    MOMENTSCIENCE — MOBILE (bottom sheet)
    ============================================================================= */
 @media (max-width: 640px) {
+  /* Drag handle — hidden on desktop, visible on mobile */
+  .ms-sheet-handle {
+    width: 36px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.20);
+    border-radius: 2px;
+    margin: 10px auto 6px;
+    flex-shrink: 0;
+  }
+
   /* Bottom sheet: overlay anchors to bottom of viewport */
   .ms-overlay {
     align-items: flex-end;
@@ -906,14 +919,26 @@ html, body {
     animation: ms-slide-up 0.32s cubic-bezier(0.34, 1.20, 0.64, 1) both;
   }
 
-  /* Compact logo strip — horizontal with small logo */
+  /* Stack logo above body — THE critical fix */
+  .ms-content {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  /* Logo strip: full-width horizontal band, logo left-aligned */
   .ms-image-wrap {
-    padding: 14px 16px;
+    width: 100%;
+    flex-direction: row;
+    justify-content: flex-start;
+    border-right: none;
+    border-bottom: 1px solid rgba(205, 145, 30, 0.18);
+    padding: 12px 16px;
+    gap: 0;
   }
   .ms-image {
-    width: 72px;
-    height: 72px;
-    border-radius: 14px;
+    width: 60px;
+    height: 60px;
+    border-radius: 13px;
   }
 
   /* Tighter body on narrow screens */
