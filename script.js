@@ -278,23 +278,16 @@ document.addEventListener('DOMContentLoaded', function() {
     sflBtn.textContent = 'Saving…';
     sflBtn.disabled    = true;
 
-    function onSaved() {
-      sflBtn.textContent = '✓ Saved!';
-      setTimeout(function() { advanceMSOffer(); }, 900);
+    if (offer.save_for_later_url) {
+      // Hosted PerksWallet: open the save URL directly in a new tab.
+      // The URL is the hosted perkswallet.com save-offer page — user registers
+      // there and the offer lands in their wallet. Must call window.open()
+      // synchronously in the click handler so popup blockers allow it.
+      window.open(offer.save_for_later_url, '_blank', 'noopener');
     }
 
-    if (offer.save_for_later_url) {
-      // Silent background POST — no popup, no new tab.
-      // MomentScience records the save; we just confirm and advance.
-      fetch(offer.save_for_later_url, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' }
-      })
-      .then(onSaved)
-      .catch(onSaved); // still show success — don't punish user for network hiccup
-    } else {
-      onSaved();
-    }
+    sflBtn.textContent = '✓ Saved!';
+    setTimeout(function() { advanceMSOffer(); }, 900);
   }
 
   function advanceMSOffer() {
