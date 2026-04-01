@@ -194,8 +194,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       // Update SFL button label from API settings
-      var sflLabel = msSettings.perkswallet_cta || 'SAVE FOR LATER';
-      document.getElementById('ms-cta-save').textContent = sflLabel.toUpperCase();
+      var sflLabel = msSettings.perkswallet_cta || 'Save for later';
+      document.getElementById('ms-cta-save').textContent = sflLabel.charAt(0).toUpperCase() + sflLabel.slice(1).toLowerCase();
 
       renderMSOffer(msIdx);
       msOverlay.hidden = false;
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Save for Later — always visible (design element; fallback gracefully if no URL)
     var sflBtn = document.getElementById('ms-cta-save');
-    sflBtn.textContent = 'SAVE FOR LATER';
+    sflBtn.textContent = 'Save for later';
     sflBtn.disabled    = false;
     sflBtn.hidden      = false;
     sflBtn.onclick     = function() { handleSaveForLater(offer); };

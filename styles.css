@@ -630,10 +630,10 @@ html, body {
 .ms-ribbon-inner { display: flex; align-items: center; }
 .ms-ribbon-bolt  { font-size: 16px; margin-right: 8px; line-height: 1; }
 .ms-ribbon-label {
-  font-family: 'Oswald', -apple-system, sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-family: 'Russo One', 'Oswald', -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
   color: #fff;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
   text-transform: uppercase;
@@ -750,11 +750,11 @@ html, body {
   margin-top: 4px; /* align with logo vertical rhythm */
 }
 .ms-title {
-  font-family: 'Oswald', -apple-system, sans-serif;
-  font-size: 24px;
-  font-weight: 700;
+  font-family: 'Russo One', 'Oswald', -apple-system, sans-serif;
+  font-size: 22px;
+  font-weight: 400;
   color: #ffffff;
-  line-height: 1.18;
+  line-height: 1.20;
   letter-spacing: 0.01em;
   margin-bottom: 7px;
   padding-right: 32px; /* clear T&C tag */
@@ -924,10 +924,13 @@ html, body {
     padding: 0;
   }
 
-  /* Card: full width, rounded top corners only, slides up */
+  /* Card: full width, rounded top corners only, slides up, never clips below viewport */
   .ms-card {
     width: 100%;
     max-width: 100%;
+    max-height: 85dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
     border-radius: 16px 16px 0 0;
     border-left: none;
     border-right: none;
@@ -941,20 +944,22 @@ html, body {
     min-height: 0;
   }
 
-  /* Logo strip: full-width, logo centered */
+  /* Logo strip: full-width, logo centered, compact height */
   .ms-image-wrap {
     width: 100%;
     flex-direction: row;
     justify-content: center;
     border-right: none;
     border-bottom: 1px solid rgba(205, 145, 30, 0.18);
-    padding: 16px;
+    padding: 14px 16px;
     gap: 0;
+    background: linear-gradient(180deg, #110d06 0%, #0c0905 100%);
   }
   .ms-image {
-    width: 72px;
-    height: 72px;
-    border-radius: 16px;
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
   }
 
   /* More breathing room in body */
@@ -962,9 +967,9 @@ html, body {
     padding: 16px 18px 18px;
   }
 
-  /* Restore title to full gaming weight on mobile */
+  /* Title — Russo One at this size lands a strong gaming register */
   .ms-title {
-    font-size: 21px;
+    font-size: 20px;
     padding-right: 28px;
   }
 
