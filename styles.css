@@ -751,7 +751,7 @@ html, body {
 }
 .ms-title {
   font-family: 'Oswald', -apple-system, sans-serif;
-  font-size: 21px;
+  font-size: 24px;
   font-weight: 700;
   color: #ffffff;
   line-height: 1.18;
@@ -765,7 +765,7 @@ html, body {
   overflow: hidden;
 }
 .ms-desc {
-  font-size: 12.5px;
+  font-size: 13.5px;
   color: rgba(255, 255, 255, 0.58);
   line-height: 1.5;
   /* Cap at 2 lines — description supports, doesn't compete with the title */
@@ -925,40 +925,43 @@ html, body {
     min-height: 0;
   }
 
-  /* Logo strip: full-width horizontal band, logo left-aligned */
+  /* Logo strip: full-width, logo centered */
   .ms-image-wrap {
     width: 100%;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     border-right: none;
     border-bottom: 1px solid rgba(205, 145, 30, 0.18);
-    padding: 12px 16px;
+    padding: 16px;
     gap: 0;
   }
   .ms-image {
-    width: 60px;
-    height: 60px;
-    border-radius: 13px;
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
   }
 
-  /* Tighter body on narrow screens */
+  /* More breathing room in body */
   .ms-body {
-    padding: 12px 14px 14px;
+    padding: 16px 18px 18px;
   }
 
-  /* Smaller title on mobile */
+  /* Restore title to full gaming weight on mobile */
   .ms-title {
-    font-size: 17px;
+    font-size: 21px;
+    padding-right: 28px;
   }
 
-  /* Stack buttons vertically — full width, easy to tap, text never wraps */
+  /* Stack buttons vertically — full width, heavy enough to tap */
   .ms-btn-row {
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
+    margin-top: 16px;
   }
   .ms-btn {
-    height: 44px;
-    font-size: 12.5px;
+    height: 52px;
+    font-size: 15px;
+    letter-spacing: 0.05em;
   }
 
   /* Larger touch targets on mobile */
