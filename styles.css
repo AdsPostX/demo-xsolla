@@ -777,10 +777,12 @@ html, body {
   flex: 1; /* pushes buttons to bottom of column */
 }
 
-/* Buttons — 3D pressable, side by side in wide layout */
+/* Buttons — claim button + text link below */
 .ms-btn-row {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
   margin-top: 14px; /* consistent gap above buttons regardless of text length */
 }
 .ms-btn {
@@ -813,18 +815,31 @@ html, body {
   box-shadow: 0 1px 0 #1e6b22, 0 3px 8px rgba(0, 0, 0, 0.40);
 }
 
-/* Secondary — solid amber Save for Later */
+/* Secondary — text link (Save for Later) */
 .ms-btn--save {
-  background: linear-gradient(180deg, #f9be42 0%, #e89b0c 55%, #cf8500 100%);
-  border-top: 1px solid rgba(255, 255, 255, 0.24);
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
-  box-shadow: 0 5px 0 #7c4d00, 0 8px 18px rgba(0, 0, 0, 0.50);
+  flex: none;
+  height: auto;
+  padding: 9px 20px;
+  background: none;
+  border: none;
+  box-shadow: none;
+  text-shadow: none;
+  color: rgba(245, 166, 35, 0.72);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(245, 166, 35, 0.30);
+  transition: color 120ms, text-decoration-color 120ms;
 }
-.ms-btn--save:hover:not(:disabled) { filter: brightness(1.06); }
+.ms-btn--save:hover:not(:disabled) {
+  color: #f5a623;
+  text-decoration-color: rgba(245, 166, 35, 0.60);
+  filter: none;
+}
 .ms-btn--save:active:not(:disabled) {
-  transform: translateY(4px);
-  box-shadow: 0 1px 0 #7c4d00, 0 3px 8px rgba(0, 0, 0, 0.40);
+  transform: none;
+  box-shadow: none;
 }
 
 /* ── Footer: nav controls centered ── */
@@ -952,16 +967,20 @@ html, body {
     padding-right: 28px;
   }
 
-  /* Stack buttons vertically — full width, heavy enough to tap */
+  /* Primary CTA — bigger touch target on mobile */
   .ms-btn-row {
-    flex-direction: column;
-    gap: 10px;
     margin-top: 16px;
   }
   .ms-btn {
     height: 52px;
     font-size: 15px;
     letter-spacing: 0.05em;
+  }
+  /* Text link must not inherit the 52px button height */
+  .ms-btn--save {
+    height: auto;
+    font-size: 13px;
+    padding: 12px 20px;
   }
 
   /* Larger touch targets on mobile */
