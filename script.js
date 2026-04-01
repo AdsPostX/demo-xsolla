@@ -278,39 +278,22 @@ document.addEventListener('DOMContentLoaded', function() {
     sflBtn.textContent = 'Saving…';
     sflBtn.disabled    = true;
 
-    if (offer.save_for_later_url) {
-      // Open a blank tab SYNCHRONOUSLY in the click handler — popup blockers only
-      // allow window.open in synchronous event handlers, not inside fetch().then().
-      // We navigate it to the PerksWallet save page once the POST resolves.
-      var pwTab = window.open('about:blank', '_blank');
+    function onSaved() {
+      sflBtn.textContent = '✓ Saved!';
+      setTimeout(function() { advanceMSOffer(); }, 900);
+    }
 
+    if (offer.save_for_later_url) {
+      // Silent background POST — no popup, no new tab.
+      // MomentScience records the save; we just confirm and advance.
       fetch(offer.save_for_later_url, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' }
       })
-      .then(function(r) {
-        if (r.ok && pwTab) {
-          // response.url is the final redirect destination: app.perkswallet.com/save-offer
-          pwTab.location.href = r.url;
-        } else if (pwTab) {
-          pwTab.close(); // POST failed — close the blank tab
-        }
-        var savedTxt = (msSettings.saved_offer_text || 'Saved').toUpperCase();
-        sflBtn.textContent = '✓ ' + savedTxt + '!';
-        setTimeout(function() { advanceMSOffer(); }, 900);
-      })
-      .catch(function() {
-        if (pwTab) pwTab.close();
-        var savedTxt = (msSettings.saved_offer_text || 'Saved').toUpperCase();
-        sflBtn.textContent = '✓ ' + savedTxt + '!';
-        setTimeout(function() { advanceMSOffer(); }, 900);
-      });
-
+      .then(onSaved)
+      .catch(onSaved); // still show success — don't punish user for network hiccup
     } else {
-      // No SFL URL on this offer — just mark saved and advance
-      var savedTxt = (msSettings.saved_offer_text || 'Saved').toUpperCase();
-      sflBtn.textContent = '✓ ' + savedTxt + '!';
-      setTimeout(function() { advanceMSOffer(); }, 600);
+      onSaved();
     }
   }
 
