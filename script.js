@@ -275,39 +275,42 @@ document.addEventListener('DOMContentLoaded', function() {
   function handleSaveForLater(offer) {
     var sflBtn = document.getElementById('ms-cta-save');
 
+    sflBtn.textContent = 'Saving…';
+    sflBtn.disabled    = true;
+
     if (offer.save_for_later_url) {
-      // Open PerksWallet NOW — synchronously in the click handler.
-      // window.open inside fetch().then() is blocked by popup blockers (async context).
-      // The SFL POST response is {"message":"Offer saved successfully"} — no URL returned.
-      // We open offerwall_url directly as the PerksWallet destination.
-      window.open(offer.offerwall_url || 'https://perkswallet.com', '_blank', 'noopener');
+      // Open a blank tab SYNCHRONOUSLY in the click handler — popup blockers only
+      // allow window.open in synchronous event handlers, not inside fetch().then().
+      // We navigate it to the PerksWallet save page once the POST resolves.
+      var pwTab = window.open('about:blank', '_blank');
 
-      sflBtn.textContent = 'SAVING…';
-      sflBtn.disabled    = true;
-
-      // POST to SFL endpoint in the background to persist the save server-side
-      fetch(offer.save_for_later_url, { method: 'POST' })
-        .then(function(r) { return r.json(); })
-        .then(function() {
-          var savedTxt = (msSettings.saved_offer_text || 'Saved').toUpperCase();
-          sflBtn.textContent = '✓ ' + savedTxt + '!';
-          setTimeout(function() { advanceMSOffer(); }, 900);
-        })
-        .catch(function() {
-          // POST failed but PW already opened — still mark saved and advance
-          var savedTxt = (msSettings.saved_offer_text || 'Saved').toUpperCase();
-          sflBtn.textContent = '✓ ' + savedTxt + '!';
-          setTimeout(function() { advanceMSOffer(); }, 900);
-        });
-
-    } else if (offer.offerwall_url) {
-      window.open(offer.offerwall_url, '_blank', 'noopener');
-      var savedTxt2 = (msSettings.saved_offer_text || 'Saved').toUpperCase();
-      sflBtn.textContent = '✓ ' + savedTxt2 + '!';
-      setTimeout(function() { advanceMSOffer(); }, 600);
+      fetch(offer.save_for_later_url, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(function(r) {
+        if (r.ok && pwTab) {
+          // response.url is the final redirect destination: app.perkswallet.com/save-offer
+          pwTab.location.href = r.url;
+        } else if (pwTab) {
+          pwTab.close(); // POST failed — close the blank tab
+        }
+        var savedTxt = (msSettings.saved_offer_text || 'Saved').toUpperCase();
+        sflBtn.textContent = '✓ ' + savedTxt + '!';
+        setTimeout(function() { advanceMSOffer(); }, 900);
+      })
+      .catch(function() {
+        if (pwTab) pwTab.close();
+        var savedTxt = (msSettings.saved_offer_text || 'Saved').toUpperCase();
+        sflBtn.textContent = '✓ ' + savedTxt + '!';
+        setTimeout(function() { advanceMSOffer(); }, 900);
+      });
 
     } else {
-      advanceMSOffer();
+      // No SFL URL on this offer — just mark saved and advance
+      var savedTxt = (msSettings.saved_offer_text || 'Saved').toUpperCase();
+      sflBtn.textContent = '✓ ' + savedTxt + '!';
+      setTimeout(function() { advanceMSOffer(); }, 600);
     }
   }
 
