@@ -278,12 +278,13 @@ document.addEventListener('DOMContentLoaded', function() {
     sflBtn.textContent = 'Saving…';
     sflBtn.disabled    = true;
 
-    if (offer.save_for_later_url) {
-      // Hosted PerksWallet: open the save URL directly in a new tab.
-      // The URL is the hosted perkswallet.com save-offer page — user registers
-      // there and the offer lands in their wallet. Must call window.open()
-      // synchronously in the click handler so popup blockers allow it.
-      window.open(offer.save_for_later_url, '_blank', 'noopener');
+    if (offer.click_url) {
+      // Option B — Hosted PerksWallet via Direct Link:
+      // Append &save_for_later=1 to click_url. The tracker redirects the user
+      // to https://app.perkswallet.com/save-offer instead of the offer landing page.
+      // User enters email/phone to save the offer to their wallet.
+      var saveUrl = offer.click_url + (offer.click_url.indexOf('?') >= 0 ? '&' : '?') + 'save_for_later=1';
+      window.open(saveUrl, '_blank', 'noopener');
     }
 
     sflBtn.textContent = '✓ Saved!';
