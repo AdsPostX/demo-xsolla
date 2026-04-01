@@ -60,7 +60,7 @@ window.DEMO_CONFIG = {
     apiKey:    "fd49c407-3adb-4982-91ce-d0a37bcdc1f5",  // PerksWallet-enabled key
     placement: "order_confirmation",
     maxOffers: 3,
-    devMode:   true,                // true = test offers, disables impression tracking
+    devMode:   false,               // false = live offers, impression tracking enabled
   },
 
 };
