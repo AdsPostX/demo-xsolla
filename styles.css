@@ -786,7 +786,8 @@ html, body {
   margin-top: 14px; /* consistent gap above buttons regardless of text length */
 }
 .ms-btn {
-  flex: 1;
+  flex: none;
+  width: 100%;
   height: 46px;
   border-radius: 10px;
   font-family: var(--font);
