@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     sflBtn.textContent = '✓ Saved!';
-    setTimeout(function() { advanceMSOffer(); }, 900);
+    setTimeout(function() { advanceMSOffer(); }, 1800);
   }
 
   function advanceMSOffer() {

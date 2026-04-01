@@ -547,13 +547,13 @@ html, body {
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: rgba(0, 0, 0, 0.80);
+  background: rgba(0, 0, 0, 0.42);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   animation: msOverlayIn 0.20s ease both;
 }
 @keyframes msOverlayIn {
@@ -828,6 +828,7 @@ html, body {
   color: rgba(245, 166, 35, 0.72);
   font-size: 12px;
   font-weight: 600;
+  text-transform: none;
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-color: rgba(245, 166, 35, 0.30);
